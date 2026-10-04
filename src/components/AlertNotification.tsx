@@ -36,9 +36,10 @@ export default function AlertNotification({ title, subtitle, onClose }: AlertNot
     const playSiren = async () => {
       try {
         const { sound } = await Audio.Sound.createAsync(
-          require('./assets/siren.mp3'),
-          { shouldPlay: true, isLooping: true }
+          'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+          { shouldPlay: true, isLooping: true, volume: 0.4 }
         );
+
         sirenSound.current = sound;
         await sound.playAsync();
       } catch (error) {
@@ -84,7 +85,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(2, 8, 23, 0.7)',
+    backgroundColor: 'rgba(2, 8, 23, 0.75)',
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 20,

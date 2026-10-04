@@ -1,26 +1,39 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import AlertNotification from '../components/AlertNotification';
+import { getNearbyHazards, getSampleHazards, minutesSince } from '../services/routeService';
 
 export default function HomeScreen() {
   const [showAlert, setShowAlert] = useState(true);
+
+  const hazards = getSampleHazards();
+  const nearby = getNearbyHazards(-33.8678, 151.2093, hazards, 500);
+
+  useEffect(() => {
+    if (nearby.length > 0) {
+      setShowAlert(true);
+    }
+  }, [nearby]);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Puffways</Text>
       <Text style={styles.subtitle}>Navigate the quiet way</Text>
 
-      <ScrollView contentContainerStyle={styles.list}>
-        <Text style={styles.cardTitle}>Recent local alerts</Text>
-        <Text style={styles.alertRow}>Police radar • Last confirmed 2 mins ago</Text>
-        <Text style={styles.alertRow}>Camera • Last confirmed 9 mins ago</Text>
-        <Text style={styles.alertRow}>Heavy traffic • Last confirmed 18 mins ago</Text>
+      <ScrollView style={styles.list}>
+        <Text style={styles.sectionTitle}>Recent local alerts</Text>
+
+        {hazards.map((hazard) => (
+          <Text key={hazard.id} style={styles.row}>
+            {hazard.title} • Last confirmed {Math.round(minutesSince(hazard.lastConfirmedAt))} mins ago
+          </Text>
+        ))}
       </ScrollView>
 
       {showAlert && (
         <AlertNotification
           title="Police alert"
-          subtitle="Last confirmed 2 minutes ago near Queen Street. Consider a quieter backup route."
+          subtitle="Last confirmed 2 minutes ago near Queen Street. Consider the quiet route."
           onClose={() => setShowAlert(false)}
         />
       )}
@@ -41,25 +54,24 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   subtitle: {
-    marginTop: 6,
     color: '#94A3B8',
     fontSize: 16,
+    marginBottom: 18,
   },
   list: {
-    marginTop: 26,
-    paddingBottom: 30,
+    flex: 1,
   },
-  cardTitle: {
+  sectionTitle: {
     color: '#F8FAFC',
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: '700',
-    marginBottom: 14,
+    marginBottom: 12,
   },
-  alertRow: {
+  row: {
     backgroundColor: '#111827',
+    color: '#E2E8F0',
     borderRadius: 12,
     padding: 14,
-    color: '#E2E8F0',
     marginBottom: 10,
     borderWidth: 1,
     borderColor: '#1E293B',
