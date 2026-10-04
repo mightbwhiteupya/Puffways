@@ -1,4 +1,4 @@
-import { HazardMarker, HazardType, RouteOption } from '../types';
+import { HazardMarker, HazardType, PoliceType, RouteOption } from '../types';
 
 const routeSeeds: Array<RouteOption> = [
   {
@@ -64,15 +64,33 @@ export function getAlertPriority(hazard: HazardMarker): number {
   return Math.max(0, Math.min(100, base + recencyDecay + severityBoost));
 }
 
+export function getPolicePenalty(policeType?: PoliceType): number {
+  switch (policeType) {
+    case 'fixed-camera':
+      return 95;
+    case 'mobile-camera':
+      return 88;
+    case 'highway-patrol':
+      return 92;
+    case 'marked-police':
+      return 80;
+    case 'unmarked-police':
+      return 78;
+    default:
+      return 0;
+  }
+}
+
 export function getSampleHazards(): HazardMarker[] {
   return [
     {
       id: 'hazard-1',
       type: 'police',
+      policeType: 'mobile-camera',
       latitude: -33.8678,
       longitude: 151.2093,
-      title: 'Police radar',
-      note: 'Mobile speed check near the shopping strip',
+      title: 'Mobile speed camera',
+      note: 'Speed check near the shopping strip',
       severity: 'medium',
       lastConfirmedAt: new Date(Date.now() - 2 * 60000).toISOString(),
       active: true,
@@ -80,9 +98,10 @@ export function getSampleHazards(): HazardMarker[] {
     {
       id: 'hazard-2',
       type: 'camera',
+      policeType: 'fixed-camera',
       latitude: -33.8725,
       longitude: 151.214,
-      title: 'Fixed camera',
+      title: 'Fixed speed camera',
       note: 'Approach from the eastbound lane',
       severity: 'high',
       lastConfirmedAt: new Date(Date.now() - 9 * 60000).toISOString(),
@@ -90,24 +109,38 @@ export function getSampleHazards(): HazardMarker[] {
     },
     {
       id: 'hazard-3',
-      type: 'roadworks',
+      type: 'police',
+      policeType: 'marked-police',
       latitude: -33.876,
       longitude: 151.205,
-      title: 'Roadworks',
-      note: 'Single lane active during rush hour',
+      title: 'Marked police car',
+      note: 'Stationary patrol on the arterial road',
       severity: 'medium',
       lastConfirmedAt: new Date(Date.now() - 18 * 60000).toISOString(),
       active: true,
     },
     {
       id: 'hazard-4',
-      type: 'traffic',
+      type: 'police',
+      policeType: 'highway-patrol',
       latitude: -33.88,
       longitude: 151.22,
-      title: 'Heavy congestion',
-      note: 'Main corridor is backed up',
+      title: 'Highway patrol',
+      note: 'Speed enforcement on the highway entry',
       severity: 'high',
       lastConfirmedAt: new Date(Date.now() - 26 * 60000).toISOString(),
+      active: true,
+    },
+    {
+      id: 'hazard-5',
+      type: 'police',
+      policeType: 'unmarked-police',
+      latitude: -33.864,
+      longitude: 151.216,
+      title: 'Unmarked police',
+      note: 'Unmarked vehicle near the service road',
+      severity: 'high',
+      lastConfirmedAt: new Date(Date.now() - 7 * 60000).toISOString(),
       active: true,
     },
   ];

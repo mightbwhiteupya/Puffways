@@ -1,8 +1,16 @@
 export type HazardType = 'police' | 'camera' | 'accident' | 'roadworks' | 'hazard' | 'traffic';
 
+export type PoliceType =
+  | 'fixed-camera'
+  | 'mobile-camera'
+  | 'marked-police'
+  | 'highway-patrol'
+  | 'unmarked-police';
+
 export type HazardMarker = {
   id: string;
   type: HazardType;
+  policeType?: PoliceType;
   latitude: number;
   longitude: number;
   title: string;
@@ -30,4 +38,12 @@ export const hazardTypeColors: Record<HazardType | string, string> = {
   roadworks: '#FDBA74',
   hazard: '#93C5FD',
   traffic: '#A7F3D0',
+};
+
+export const policeTypeLabels: Record<PoliceType, string> = {
+  'fixed-camera': 'Fixed speed camera',
+  'mobile-camera': 'Mobile speed camera',
+  'marked-police': 'Marked police car',
+  'highway-patrol': 'Highway patrol',
+  'unmarked-police': 'Unmarked police',
 };

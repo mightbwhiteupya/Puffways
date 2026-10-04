@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import AlertNotification from '../components/AlertNotification';
+import PoliceAlertCard from '../components/PoliceAlertCard';
 import { getNearbyHazards, getSampleHazards, minutesSince } from '../services/routeService';
 
 export default function HomeScreen() {
@@ -24,10 +25,28 @@ export default function HomeScreen() {
         <Text style={styles.sectionTitle}>Recent local alerts</Text>
 
         {hazards.map((hazard) => (
-          <Text key={hazard.id} style={styles.row}>
-            {hazard.title} • Last confirmed {Math.round(minutesSince(hazard.lastConfirmedAt))} mins ago
-          </Text>
+          <View key={hazard.id} style={styles.row}>
+            <Text style={styles.rowTitle}>{hazard.title}</Text>
+            <Text style={styles.rowText}>
+              {hazard.policeType ? `Type: ${hazard.policeType}` : 'Type: general alert'}
+            </Text>
+            <Text style={styles.rowText}>
+              Last confirmed {Math.round(minutesSince(hazard.lastConfirmedAt))} mins ago
+            </Text>
+          </View>
         ))}
+
+        <Text style={styles.sectionTitle}>Police clearly identified</Text>
+
+        {hazards
+          .filter((hazard) => hazard.policeType)
+          .map((hazard) => (
+            <PoliceAlertCard
+              key={hazard.id}
+              policeType={hazard.policeType!}
+              lastConfirmedAt={`${Math.round(minutesSince(hazard.lastConfirmedAt))} mins ago`}
+            />
+          ))}
       </ScrollView>
 
       {showAlert && (
@@ -69,11 +88,21 @@ const styles = StyleSheet.create({
   },
   row: {
     backgroundColor: '#111827',
-    color: '#E2E8F0',
     borderRadius: 12,
     padding: 14,
     marginBottom: 10,
     borderWidth: 1,
     borderColor: '#1E293B',
+  },
+  rowTitle: {
+    color: '#F8FAFC',
+    fontSize: 16,
+    fontWeight: '700',
+    marginBottom: 4,
+  },
+  rowText: {
+    color: '#E2E8F0',
+    fontSize: 14,
+    marginTop: 4,
   },
 });
