@@ -1,0 +1,32 @@
+{
+  "name": "Puffways",
+  "slug": "puffways",
+  "version": "1.0.0",
+  "orientation": "portrait",
+  "userInterfaceStyle": "light",
+  "platforms": [
+    "android",
+    "ios"
+  ],
+  "splash": {
+    "backgroundColor": "#0B132B"
+  },
+  "assetBundlePatterns": [
+    "**/*"
+  ],
+  "ios": {
+    "supportsTablet": true,
+    "bundleIdentifier": "com.puffways.app"
+  },
+  "android": {
+    "package": "com.puffways.app",
+    "adaptiveIcon": {
+      "backgroundColor": "#0B132B"
+    }
+  },
+  "extra": {
+    "eas": {
+      "projectId": "puffways-project-id"
+    }
+  }
+}
